@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Very Important Questionnaire</title>
+    <!-- Retro Pixel Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e8e4dc; /* Warm linen tone */
+            font-family: 'Press Start 2P', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: #4a403a;
+        }
+
+        .card {
+            background: #fdfbf7;
+            border: 4px solid #4a403a;
+            border-radius: 8px;
+            padding: 30px;
+            width: 85%;
+            max-width: 450px;
+            box-shadow: 6px 6px 0px #4a403a;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h2 {
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-weight: normal;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: #bc8a5f;
+            color: white;
+            border: 3px solid #4a403a;
+            padding: 12px 18px;
+            font-size: 0.75rem;
+            font-family: 'Press Start 2P', monospace;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #4a403a;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #4a403a;
+        }
+
+        button.secondary {
+            background-color: #d8e2dc;
+            color: #386641;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Footer disclaimer note pinned to the bottom of the screen */
+        .footer-note {
+            position: absolute;
+            bottom: 12px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.55rem;
+            color: #7a6e65;
+            z-index: 10;
+            line-height: 1.5;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        /* Bouncing Teddy Bears Canvas Layer */
+        #bear-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Bears Canvas -->
+    <canvas id="bear-canvas"></canvas>
+
+    <div class="card" id="card-container">
+        <!-- Step 1: Question 1 -->
+        <div id="step-1" class="step">
+            <h2>Do you like women?????</h2>
+            <div class="btn-container">
+                <button onclick="nextStep(2)">Yes</button>
+                <button class="secondary" onclick="divertPath('Well shitt I mayhaps have a crush on you. I needed to get it off my chest cause its been driving me insane…')">No</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Question 2 -->
+        <div id="step-2" class="step hidden">
+            <h2>Are you single?????</h2>
+            <div class="btn-container">
+                <button onclick="nextStep(3)">Yes</button>
+                <button class="secondary" onclick="divertPath('so like I am sorry but like I have a crush on you and yeah umm just need the rejection')">No</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Final Confession Card -->
+        <div id="step-3" class="step hidden">
+            <h2 style="font-size: 0.65rem; text-align: left; line-height: 1.6;">
+                You are like super cool and like really pretty and I love yapping with you, so I low key maybe have a crush on you and like yeah.<br><br>
+                It’s okay if you don’t like me back. I just needed to get off my chest because it has been driving me insane…<br><br>
+                anyways uhhh bye or peace and love 🫰
+            </h2>
+            <div class="btn-container" style="margin-top: 15px;">
+                <button onclick="resetApp()">Start Over 🧸</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Footer Note -->
+    <div class="footer-note">
+        ⚠️ psst: responses don't auto-save to a backend server, so make sure to text me your yes/no answers because i am not good at backend servers 📱✨
+    </div>
+
+    <script>
+        function nextStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('step-' + stepNumber).classList.remove('hidden');
+        }
+
+        function divertPath(message) {
+            const container = document.getElementById('card-container');
+            container.innerHTML = `<h2 style="font-size: 0.7rem; line-height: 1.6;">${message}</h2><br><button onclick="resetApp()">Restart</button>`;
+        }
+
+        function resetApp() {
+            location.reload();
+        }
+
+        /* Massive Swarm of Bouncing Bears */
+        const canvas = document.getElementById('bear-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class BouncingBear {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 3;
+                this.vy = (Math.random() - 0.5) * 3;
+                this.size = 28 + Math.random() * 12; 
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width - this.size) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height - this.size) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.font = `${this.size}px monospace`;
+                ctx.fillText('🧸', this.x, this.y);
+            }
+        }
+
+        // Spawn 50 bears!
+        const bears = [];
+        for (let i = 0; i < 50; i++) {
+            bears.push(new BouncingBear());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bears.forEach(bear => {
+                bear.update();
+                bear.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
